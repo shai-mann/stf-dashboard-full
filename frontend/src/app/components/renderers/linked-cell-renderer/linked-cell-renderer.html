@@ -1,0 +1,12 @@
+<div class="app-div-spacer">
+  <div>
+    <a class="id-link" [href]="config.link">{{ config.text }}</a>
+    <clr-tooltip *ngIf="shouldShowConfigTooltip">
+      <cds-icon clrTooltipTrigger role="img" shape="info-circle" size="24" aria-label="Missing cell tooltip."></cds-icon>
+      <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+        <span>{{ config.tooltip }}</span>
+      </clr-tooltip-content>
+    </clr-tooltip>
+  </div>
+  <em *ngIf="config.subtext">{{ config.subtext}}</em>
+</div>

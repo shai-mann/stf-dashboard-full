@@ -1,0 +1,45 @@
+<div style="margin: 10px">
+  <div class="clr-row" style="justify-content: space-between;">
+    <div class="clr-col-lg-4 clr-col-md-8 clr-col-12">
+      <div class="card">
+        <ng-container *ngIf="model$ | async as model">
+          <h3 class="card-header"><a [href]="model.jobUrl" target="_blank">{{model.upstreamName}}</a></h3>
+          <div class="card-block">
+            <h4 class="card-title"><a [href]="model.buildUrl" target="_blank">Build #{{model.buildNumber}} [ob-{{model.ob}}]:</a></h4>
+            <div class="card-text-separator">
+              <div class="card-text">
+                <strong>Status:</strong> {{model.status}}
+              </div>
+              <div class="card-text">
+                <cds-icon [attr.status]="'success'" [attr.shape]="'success-standard'" style="margin: 5px" />{{model.numPassed}}
+                <cds-icon [attr.status]="'warning'" [attr.shape]="'warning-standard'" style="margin: 5px" />{{model.numSkipped}}
+                <cds-icon [attr.status]="'danger'" [attr.shape]="'error-standard'" style="margin: 5px" />{{model.numFailed}}
+              </div>
+            </div>
+            <div class="card-text">
+              <strong>Built at:</strong> {{this.formatBuildTimestamp(model.buildTimestamp)}}
+            </div>
+          </div>
+          <div class="card-footer" style="display: grid;">
+            <button *ngIf="hasNext(model)" class="btn btn-sm btn-link" style="justify-self: flex-start; grid-row: 1;" (click)="this.navigate(model.nextBuildId)">Next Build</button>
+            <button *ngIf="hasPrev(model)" class="btn btn-sm btn-link" style="justify-self: flex-end; grid-row: 1;" (click)="this.navigate(model.prevBuildId)">Previous Build</button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <button class="btn" (click)="this.navigateBack()">Back</button>
+  </div>
+  <ng-container *ngIf="buildSummaries$ | async as buildSummaries">
+    <ng-container *ngIf="gridData$ | async as gridData">
+      <app-grid (gridRefresh)="fetchGridData($event)"
+                [gridData]="getGridData(gridData)"
+                [idRenderer]="linkRenderer"
+                [resultRenderer]="heatMapRenderer"
+                [columnTitleRenderer]="columnTitleRenderer(buildSummaries)"
+                [columnRenderRequest]="columnRenderRequest"
+                [cornerTitle]="cornerTitle"
+                [shouldDoStatusFiltering]="true"
+      ></app-grid>
+    </ng-container>
+  </ng-container>
+</div>

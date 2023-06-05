@@ -1,0 +1,61 @@
+<div style="margin: 10px">
+  <ng-container *ngIf="model$ | async as model">
+    <div class="clr-row" style="justify-content: space-between; margin-bottom: 10px;">
+      <div class="clr-col-lg-9 clr-col-md-8 clr-col-12">
+        <div class="card">
+          <h3 class="card-header">{{model.name}}()</h3>
+          <div class="card-block">
+            <div class="clr-row" style="justify-content: space-between; margin: 5px;">
+              <div class="card-title">
+                <h4 class="card-title">Parameters: {{model.parameters}}</h4>
+              </div>
+              <div class="card-text">
+                <strong>{{model.packagePath}}.{{model.className}}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn" (click)="this.navigateBack()">Back</button>
+    </div>
+    <clr-accordion [clrAccordionMultiPanel]="true">
+      <clr-accordion-panel *ngFor="let sddc of (sddcTypes | async)">
+        <clr-accordion-title>{{sddc}}</clr-accordion-title>
+        <clr-accordion-content *ngFor="let result of model.results[sddc]">
+          <div class="clr-row app-clr-row">
+            <div class="clr-col-lg-9 clr-col-md-8 clr-col-12">
+              <div class="card">
+                <h3 class="card-header">
+                  <a class="id-link" [href]="navigateToUpstream(result.upstreamBuildId)">Build #{{result.buildNumber}} [ob-{{result.ob}}]</a>
+                </h3>
+                <div class="card-block">
+                  <div class="clr-row" style="justify-content: space-between; margin: 5px;">
+                    <div class="card-title">
+                      <h4 class="card-title">Status: {{result.status}}</h4>
+                    </div>
+                    <div class="card-text">
+                      <p><strong>Run duration:</strong> {{this.formatDuration(result.duration)}}</p>
+                      <p><strong>Started At:</strong> {{this.formatStartedAt(result.startedAt)}}</p>
+                      <ng-container *ngIf="result.exception">
+                        <clr-accordion>
+                          <clr-accordion-panel>
+                            <clr-accordion-title>
+                              Stacktrace:
+                            </clr-accordion-title>
+                            <clr-accordion-content>
+                              <p>{{result.exception}}</p>
+                            </clr-accordion-content>
+                          </clr-accordion-panel>
+                        </clr-accordion>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </clr-accordion-content>
+      </clr-accordion-panel>
+    </clr-accordion>
+  </ng-container>
+</div>

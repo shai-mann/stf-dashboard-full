@@ -1,0 +1,31 @@
+<div>
+  <div class="upstream-page-heading">
+    <h1>Test History</h1>
+    <button class="btn" (click)="navigateToTestBreakdown()">Back to Test View</button>
+  </div>
+  <ng-container *ngIf="testModel$ | async as model">
+    <div class="clr-row" style="justify-content: space-between;">
+      <div class="clr-col-lg-4 clr-col-md-8 clr-col-12">
+        <div class="card">
+          <h3 class="card-header">{{model.name}}()</h3>
+          <div class="card-block">
+            <h4 class="card-title">{{model.suite}}</h4>
+            <div class="card-text-separator">
+              <div class="card-text">
+                Parameters: {{model.parameters}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="gridData$ | async as data">
+    <app-grid (gridRefresh)="fetchGridData($event)"
+              [gridData]="getGridData(data)"
+              [idRenderer]="linkRenderer.bind(this)"
+              [resultRenderer]="heatMapRenderer"
+              [cornerTitle]="cornerTitle"
+    ></app-grid>
+  </ng-container>
+</div>

@@ -1,0 +1,11 @@
+<vcd-datagrid
+  class="integrations-datagrid"
+  #datagrid
+  [gridData]="gridData"
+  [columns]="columns"
+  emptyGridPlaceholder="No Data found."
+  [trackBy]="gridTrackBy"
+  (gridRefresh)="onGridRefresh($event)"
+  [pagination]="paginationInfo"
+>
+</vcd-datagrid>

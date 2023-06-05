@@ -1,0 +1,12 @@
+.id-link {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100px;
+}
+
+.app-div-spacer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

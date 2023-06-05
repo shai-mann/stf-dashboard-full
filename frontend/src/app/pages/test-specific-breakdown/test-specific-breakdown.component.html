@@ -1,0 +1,31 @@
+<div>
+  <div class="upstream-page-heading">
+    <h1>Test Specific Breakdown</h1>
+    <button class="btn" (click)="navigateToHome()">Job View</button>
+  </div>
+  <div style="display: flex; justify-content: flex-end;">
+    <form clrForm>
+      <clr-input-container>
+        <label>Filter all</label>
+        <input clrInput placeholder="testName..."
+               [name]="masterFilterTitle"
+               [ngModel]="''"
+               (ngModelChange)="masterFilterUpdate($event)"
+        />
+      </clr-input-container>
+    </form>
+  </div>
+  <clr-accordion [clrAccordionMultiPanel]="true">
+    <clr-accordion-panel *ngFor="let suite of (suiteTypes | async)" [clrAccordionPanelOpen]="shouldExpandAll">
+      <clr-accordion-title>{{suite}}</clr-accordion-title>
+      <clr-accordion-content>
+        <app-grid (gridRefresh)="refreshGridData($event, suite)"
+                  [gridData]="getGridData(suite)"
+                  [idRenderer]="linkRenderer"
+                  [resultRenderer]="heatMapRenderer"
+                  [cornerTitle]="cornerTitle"
+        ></app-grid>
+      </clr-accordion-content>
+    </clr-accordion-panel>
+  </clr-accordion>
+</div>
