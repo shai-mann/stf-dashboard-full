@@ -26,6 +26,7 @@ import com.vmware.stfdashboard.util.Utils;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +63,9 @@ public class Processor {
     public static final String STAGING_JOB_TOKEN = "Staging";
 
     private static final Function<String, Supplier<RuntimeException>> ifEntityNotFound = (s) ->
-        () -> {
-            throw new IllegalArgumentException(s);
-    };
+            () -> {
+                throw new IllegalArgumentException(s);
+            };
 
     /* GENERATED (JENKINS) REPOSITORIES */
     @Autowired
@@ -348,12 +350,19 @@ public class Processor {
         }};
 
         List<JenkinsJobBuild> jenkinsJobBuilds = findJobBuilds(t.getBuild(), buildNumbers);
-        List<JobBuildEntity> jobBuilds = Utils.toList(jobBuildRepository.findAllById(
-                () -> jenkinsJobBuilds.stream()
-                        .filter(b -> !skippedJobBuilds.contains(b))
-                        .map(JenkinsJobBuild::getId)
-                        .iterator()
-        ));
+        List<JobBuildEntity> jobBuilds = jenkinsJobBuilds.stream()
+                .filter(b -> !skippedJobBuilds.contains(b))
+                .map(JenkinsJobBuild::getId)
+                .map(jobBuildRepository::findById)
+                .map(Optional::get)
+                .toList();
+
+//        List<JobBuildEntity> jobBuilds = Utils.toList(jobBuildRepository.findAllById(
+//                () -> jenkinsJobBuilds.stream()
+//                        .filter(b -> !skippedJobBuilds.contains(b))
+//                        .map(JenkinsJobBuild::getId)
+//                        .iterator()
+//        ));
 
         return jobBuilds.stream().map(b ->
                 new TestResultEntity(
