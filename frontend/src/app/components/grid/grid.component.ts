@@ -10,7 +10,7 @@ import {
   WildCardPosition
 } from "@vcd/ui-components";
 import {ApplicationRepository} from "../../repositories/application/application.repository";
-import {BehaviorSubject, combineLatest, Observable, Subscription} from "rxjs";
+import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from "rxjs";
 import {HeatMapRenderer, HeatmapRendererConfig, Status} from "../renderers/heatmap-renderer/heatmap-renderer";
 import {LinkedCellRenderer, LinkedCellRendererConfig} from "../renderers/linked-cell-renderer/linked-cell-renderer";
 
@@ -49,7 +49,7 @@ export class GridComponent<R> implements OnInit, OnDestroy {
   resultRenderer: (r: R, sddc: String) => HeatmapRendererConfig;
 
   @Input()
-  columnRenderRequest = new BehaviorSubject<any>(0);
+  columnRenderRequest = new Subject();
 
   gridTrackBy = (i: number, s: String) => s as string;
 
@@ -69,7 +69,7 @@ export class GridComponent<R> implements OnInit, OnDestroy {
   constructor(private repository: ApplicationRepository) {}
 
   ngOnInit() {
-    this.subscription.add(combineLatest(this.sddcs, this.columnRenderRequest).subscribe(([columns, r]) => {
+    this.subscription.add(combineLatest(this.sddcs$, this.columnRenderRequest).subscribe(([columns, r]) => {
       this.columns = [{
         displayName: this.cornerTitle,
         renderer: LinkedCellRenderer<R>(this.idRenderer),
@@ -88,6 +88,7 @@ export class GridComponent<R> implements OnInit, OnDestroy {
         }
       })];
     }));
+    this.columnRenderRequest.next(null);
   }
 
   ngOnDestroy() {
@@ -98,8 +99,8 @@ export class GridComponent<R> implements OnInit, OnDestroy {
     this.gridRefresh.emit(gridState);
   }
 
-  get sddcs(): Observable<String[]> {
-    return this.repository.getSddcTypes();
+  get sddcs$(): Observable<String[]> {
+    return this.repository.getSddcTypes$();
   }
 
   private getStatusValue(status: string) {
@@ -111,6 +112,7 @@ export class GridComponent<R> implements OnInit, OnDestroy {
       case "FAILED":
         return "FAIL"
       case "MISSING":
+      default:
         return "MISSING"
     }
   }

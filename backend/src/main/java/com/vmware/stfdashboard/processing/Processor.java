@@ -23,10 +23,8 @@ import com.vmware.stfdashboard.util.Status;
 import com.vmware.stfdashboard.util.SuiteType;
 import com.vmware.stfdashboard.util.Utils;
 
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +35,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +62,9 @@ public class Processor {
     public static final String STAGING_JOB_TOKEN = "Staging";
 
     private static final Function<String, Supplier<RuntimeException>> ifEntityNotFound = (s) ->
-            () -> {
-                throw new IllegalArgumentException(s);
-            };
+        () -> {
+            throw new IllegalArgumentException(s);
+    };
 
     /* GENERATED (JENKINS) REPOSITORIES */
     @Autowired
@@ -108,9 +107,6 @@ public class Processor {
         List<JenkinsJobBuild> skippedJobBuilds = processBuilds(skippedJobs);
 
         processTestsTable(skippedJobBuilds);
-
-//        processUniqueTests();
-//        processTestResults(skippedJobBuilds);
     }
 
     @Transactional
@@ -131,7 +127,7 @@ public class Processor {
     /* JOB PROCESSING */
 
     @Transactional
-    private void processUpstreamJobs() {
+    void processUpstreamJobs() {
         logger.info("Processing Upstream Jobs.");
 
         List<JenkinsJob> upstreamJobs =
@@ -143,14 +139,14 @@ public class Processor {
         // no upstream jobs should be skipped, so it's a problem if any are.
         if (!out.getSecond().isEmpty()) {
             logger.warn("Skipped Upstream Job entries for: " +
-                    out.getSecond().stream().map(JenkinsJob::getName).toList());
+                    out.getSecond().stream().map(JenkinsJob::getName).collect(Collectors.toList()));
         }
 
         logger.info("Created {} entries.", upstreamJobRepository.count());
     }
 
     @Transactional
-    private List<JenkinsJob> processJobs() {
+    List<JenkinsJob> processJobs() {
         logger.info("Processing Jobs.");
 
         // grabs all non-upstream (non-staging) jobs
@@ -180,7 +176,7 @@ public class Processor {
     /* BUILD PROCESSING */
 
     @Transactional
-    private void processUpstreamBuilds() {
+    void processUpstreamBuilds() {
         logger.info("Processing Upstream Builds.");
 
         List<JenkinsJobBuild> upstreamBuilds =
@@ -193,14 +189,14 @@ public class Processor {
         // no upstream builds should be skipped, so it's a problem if any are.
         if (!out.getSecond().isEmpty()) {
             logger.warn("Skipped Upstream Build entries for: " +
-                    out.getSecond().stream().map(JenkinsJobBuild::getName).toList());
+                    out.getSecond().stream().map(JenkinsJobBuild::getName).collect(Collectors.toList()));
         }
 
         logger.info("Created {} entries.", upstreamBuildRepository.count());
     }
 
     @Transactional
-    private List<JenkinsJobBuild> processBuilds(List<JenkinsJob> skippedJobs) {
+    List<JenkinsJobBuild> processBuilds(List<JenkinsJob> skippedJobs) {
         logger.info("Processing Job Builds.");
 
         // ignore all builds linked to jobs that weren't processed
@@ -224,40 +220,40 @@ public class Processor {
         UpstreamJobEntity upstreamJob = findBySuite(build.getName());
 
         return new UpstreamJobBuildEntity(build.getId(), upstreamJob, build.getBuildNumber(),
-                Utils.extractBuildNumber(build.getName()), build.getUrl(),
+                Utils.extractBuild(build.getName()), build.getUrl(),
                 Status.findByValue(build.getStatus()), build.getBuildTimestamp());
     }
 
-    private JobBuildEntity processJobBuild(JenkinsJobBuild build) {
-        UpstreamJobEntity upstreamJob = findBySuite(build.getName());
-        SddcType sddc = Utils.extractSddcType(build.getName());
+    private JobBuildEntity processJobBuild(JenkinsJobBuild jobBuild) {
+        UpstreamJobEntity upstreamJob = findBySuite(jobBuild.getName());
+        SddcType sddc = Utils.extractSddcType(jobBuild.getName());
 
         JobEntity job = jobRepository.findBySddcAndUpstream(sddc, upstreamJob).orElseThrow(
                 ifEntityNotFound.apply("Failed to find Job with Upstream ID " + upstreamJob.getId())
         );
 
-        long ob = Utils.extractBuildNumber(build.getName());
+        String build = Utils.extractBuild(jobBuild.getName());
         UpstreamJobBuildEntity upstreamBuild =
-                findClosestByUpstreamAndOb(upstreamJob, ob, build.getBuildTimestamp()).orElseThrow(
-                        ifEntityNotFound.apply("Failed to find Upstream Job Build with ob " + ob)
+                findClosestByUpstreamAndOb(upstreamJob, build, jobBuild.getBuildTimestamp()).orElseThrow(
+                        ifEntityNotFound.apply("Failed to find Upstream Job Build with ob " + build)
                 );
 
-        return new JobBuildEntity(build.getId(), job, upstreamBuild, build.getBuildNumber(),
-                build.getUrl(), build.getCommitId(), build.getStatus(), build.getFailedCount(),
-                build.getSkippedCount(), build.getBuildTimestamp());
+        return new JobBuildEntity(jobBuild.getId(), job, upstreamBuild, jobBuild.getBuildNumber(),
+                jobBuild.getUrl(), jobBuild.getCommitId(), jobBuild.getStatus(), jobBuild.getFailedCount(),
+                jobBuild.getSkippedCount(), jobBuild.getBuildTimestamp());
     }
 
     private Optional<UpstreamJobBuildEntity> findClosestByUpstreamAndOb(
-            UpstreamJobEntity upstream, long ob, long buildTimestamp) {
-        return upstreamBuildRepository.findFirstByUpstreamJobAndObAndBuildTimestampLessThanEqualOrderByBuildNumberDesc(
-                upstream, ob, buildTimestamp
+            UpstreamJobEntity upstream, String build, long buildTimestamp) {
+        return upstreamBuildRepository.findFirstByUpstreamJobAndBuildAndBuildTimestampLessThanEqualOrderByBuildNumberDesc(
+                upstream, build, buildTimestamp
         );
     }
 
     /* TEST PROCESSING */
 
     @Transactional
-    private void processTestsTable(List<JenkinsJobBuild> skippedJobBuilds) {
+    void processTestsTable(List<JenkinsJobBuild> skippedJobBuilds) {
         logger.info("Processing Jenkins Test table.");
         Map<Integer, TestEntity> uniqueTests = new HashMap<>();
         Set<TestResultEntity> results = new HashSet<>();
@@ -328,19 +324,19 @@ public class Processor {
                                                List<JenkinsJobBuild> skippedJobBuilds) {
         List<Integer> buildNumbers = new ArrayList<>() {{
             if (t.getPassedBuilds() != null) {
-                addAll(Arrays.stream(t.getPassedBuilds()).boxed().toList());
+                addAll(Arrays.stream(t.getPassedBuilds()).boxed().collect(Collectors.toList()));
             }
 
             if (t.getSkippedBuilds() != null) {
-                addAll(Arrays.stream(t.getSkippedBuilds()).boxed().toList());
+                addAll(Arrays.stream(t.getSkippedBuilds()).boxed().collect(Collectors.toList()));
             }
 
             if (t.getFailedBuilds() != null) {
-                addAll(Arrays.stream(t.getFailedBuilds()).boxed().toList());
+                addAll(Arrays.stream(t.getFailedBuilds()).boxed().collect(Collectors.toList()));
             }
 
             if (t.getPresumedPassedBuilds() != null) {
-                addAll(Arrays.stream(t.getPresumedPassedBuilds()).boxed().toList());
+                addAll(Arrays.stream(t.getPresumedPassedBuilds()).boxed().collect(Collectors.toList()));
             }
 
             int buildNumber = t.getBuild().getBuildNumber();
@@ -351,18 +347,11 @@ public class Processor {
 
         List<JenkinsJobBuild> jenkinsJobBuilds = findJobBuilds(t.getBuild(), buildNumbers);
         List<JobBuildEntity> jobBuilds = jenkinsJobBuilds.stream()
-                .filter(b -> !skippedJobBuilds.contains(b))
                 .map(JenkinsJobBuild::getId)
+                .filter(id -> skippedJobBuilds.stream().noneMatch(s -> s.getId() == id))
                 .map(jobBuildRepository::findById)
                 .map(Optional::get)
-                .toList();
-
-//        List<JobBuildEntity> jobBuilds = Utils.toList(jobBuildRepository.findAllById(
-//                () -> jenkinsJobBuilds.stream()
-//                        .filter(b -> !skippedJobBuilds.contains(b))
-//                        .map(JenkinsJobBuild::getId)
-//                        .iterator()
-//        ));
+                .collect(Collectors.toList());
 
         return jobBuilds.stream().map(b ->
                 new TestResultEntity(
@@ -370,7 +359,7 @@ public class Processor {
                         t.getStatus(), t.getException(),
                         t.getDuration(), t.getStartedAt()
                 )
-        ).toList();
+        ).collect(Collectors.toList());
     }
 
     /* HELPERS */

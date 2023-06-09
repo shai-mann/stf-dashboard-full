@@ -43,6 +43,7 @@ export class HeatMapRendererComponent implements ComponentRenderer<HeatmapRender
       case Status.FAILED:
         return "error-standard"
       case Status.MISSING:
+      default:
         return "unknown-status"
     }
   }
@@ -56,6 +57,7 @@ export class HeatMapRendererComponent implements ComponentRenderer<HeatmapRender
       case Status.FAILED:
         return "danger"
       case Status.MISSING:
+      default:
         return "info"
     }
   }

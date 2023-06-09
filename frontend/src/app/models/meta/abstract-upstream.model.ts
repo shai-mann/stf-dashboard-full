@@ -9,11 +9,11 @@ export interface AbstractUpstreamModel<T> {
 
   buildNumber: number;
 
-  ob: number;
+  build: string;
 
   name: string;
 
-  buildTimestamp: string;
+  buildTimestamp: number;
 
   status: string;
 

@@ -14,5 +14,5 @@ export interface RunInfoModel {
 
   buildNumber: number;
 
-  ob: number;
+  build: string;
 }

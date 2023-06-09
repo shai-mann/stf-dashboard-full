@@ -12,8 +12,8 @@ import java.util.Map;
 public abstract class AbstractUpstreamBuilder<E, T> {
 
     protected Integer jobId, buildId, buildNumber;
-    protected long ob, buildTimestamp;
-    protected String status;
+    protected long buildTimestamp;
+    protected String build, status;
 
     protected Map<SddcType, T> results = new HashMap<>();
 
@@ -21,7 +21,7 @@ public abstract class AbstractUpstreamBuilder<E, T> {
         @Override
         public UpstreamRun build() {
             UpstreamRun out = new UpstreamRun(
-                    jobId, buildId, buildNumber, ob, buildTimestamp, status
+                    jobId, buildId, buildNumber, build, buildTimestamp, status
             );
 
             results.forEach(out::addResult);
@@ -34,7 +34,7 @@ public abstract class AbstractUpstreamBuilder<E, T> {
         @Override
         public UpstreamSummary build() {
             UpstreamSummary out = new UpstreamSummary(
-                    jobId, buildId, buildNumber, ob, buildTimestamp, status
+                    jobId, buildId, buildNumber, build, buildTimestamp, status
             );
 
             results.forEach(out::addResult);
@@ -60,8 +60,8 @@ public abstract class AbstractUpstreamBuilder<E, T> {
         return this;
     }
 
-    public AbstractUpstreamBuilder<E, T> setOb(long ob) {
-        this.ob = ob;
+    public AbstractUpstreamBuilder<E, T> setBuild(String build) {
+        this.build = build;
         return this;
     }
 

@@ -13,8 +13,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 public class UpstreamSummary extends AbstractUpstream<RunSummary> {
 
     public UpstreamSummary(int jobId, int buildId, int buildNumber,
-                           long ob, long buildTimestamp, String status) {
-        super(jobId, buildId, buildNumber, ob, buildTimestamp, status);
+                           String build, long buildTimestamp, String status) {
+        super(jobId, buildId, buildNumber, build, buildTimestamp, status);
     }
 
 }

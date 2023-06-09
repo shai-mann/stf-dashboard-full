@@ -1,16 +1,35 @@
 package com.vmware.stfdashboard.models.generated;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.vladmihalcea.hibernate.type.array.IntArrayType;
+import com.vladmihalcea.hibernate.type.array.StringArrayType;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+import org.springframework.util.StringUtils;
 
 @Entity
 @Table(name = "test_result", schema = "public")
+@TypeDefs({
+        @TypeDef(
+                name = "string-array",
+                typeClass = StringArrayType.class
+        ),
+        @TypeDef(
+                name = "int-array",
+                typeClass = IntArrayType.class
+        )
+})
 public class JenkinsTestResult {
 
     @Id
@@ -30,23 +49,28 @@ public class JenkinsTestResult {
     @Column
     private String status;
 
-    @Column(name = "failed_builds")
+    @Type(type = "int-array")
+    @Column(name = "failed_builds", columnDefinition = "int array")
     private int[] failedBuilds;
 
-    @Column(name = "skipped_builds")
+    @Type(type = "int-array")
+    @Column(name = "skipped_builds", columnDefinition = "int array")
     private int[] skippedBuilds;
 
-    @Column(name = "passed_builds")
+    @Type(type = "int-array")
+    @Column(name = "passed_builds", columnDefinition = "int array")
     private int[] passedBuilds;
 
-    @Column(name = "presumed_passed_builds")
+    @Type(type = "int-array")
+    @Column(name = "presumed_passed_builds", columnDefinition = "int array")
     private int[] presumedPassedBuilds;
 
     @Column(name = "class_name")
     private String className;
 
-    @Column
-    private String parameters;
+    @Type(type = "string-array")
+    @Column(name = "parameters", columnDefinition = "varchar array")
+    private Object parameters;
 
     @Column(name = "package_path")
     private String packagePath;
@@ -100,7 +124,10 @@ public class JenkinsTestResult {
     }
 
     public String getParameters() {
-        return parameters == null ? "[]" : parameters;
+        return parameters == null ? "[]"
+                : "[" + Arrays.stream(((Object[]) parameters)).map(
+                        o -> (String) o).collect(Collectors.joining(","))
+                + "]";
     }
 
     public String getPackagePath() {

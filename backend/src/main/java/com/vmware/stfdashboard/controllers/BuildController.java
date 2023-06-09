@@ -5,7 +5,6 @@ import com.vmware.stfdashboard.api.UpstreamInfo;
 import com.vmware.stfdashboard.api.UpstreamSummary;
 import com.vmware.stfdashboard.services.BuildService;
 import com.vmware.stfdashboard.util.SddcType;
-import com.vmware.stfdashboard.util.Status;
 import com.vmware.stfdashboard.util.SuiteType;
 
 import java.util.List;

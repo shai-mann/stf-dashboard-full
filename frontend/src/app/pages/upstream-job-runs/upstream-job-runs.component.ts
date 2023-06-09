@@ -9,7 +9,8 @@ import {GridDataFetchResult, GridState} from "@vcd/ui-components";
 import {Router} from "@angular/router";
 import {TESTS, UPSTREAM} from "../../app-routing.module";
 import {formatDate} from "@angular/common";
-import {DATE_FORMAT, DATE_LOCALE, TIMEZONE, CLOUDY, PARTLY_CLOUDY, POURING, RAINY, SUNNY} from "../../utils";
+import {DATE_FORMAT, DATE_LOCALE, TIMEZONE} from "../../utils";
+import {WeatherIconShape} from "../../components/weather-icon/weather-icon.component";
 
 export enum BuildStatus {
   ABORTED = "ABORTED",
@@ -53,6 +54,11 @@ export class UpstreamJobRunsComponent implements OnDestroy {
   private static CLOUDY_THRESHOLD = 0.6;
   private static RAIN_THRESHOLD = 0.4;
 
+  private static calculateWeight(index: number): number {
+    let x = index / 10;
+    return 1 - (x === 0 ? 0 : Math.pow(2, 10 * x - 10));
+  }
+
   cornerTitle = UpstreamJobRunsComponent.CORNER_TITLE;
 
   gridData: Map<String, GridDataFetchResult<UpstreamSummaryModel>> = new Map();
@@ -67,12 +73,12 @@ export class UpstreamJobRunsComponent implements OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  get suiteTypes(): Observable<String[]> {
-    return this.applicationRepository.getSuiteTypes();
+  get suiteTypes$(): Observable<String[]> {
+    return this.applicationRepository.getSuiteTypes$();
   }
 
   fetchGridData(gridState: GridState<UpstreamSummaryModel>, suite: String) {
-    this.subscription.add(this.buildRepository.getUpstreamJobs(
+    this.subscription.add(this.buildRepository.getUpstreamJobs$(
       suite,
       gridState.filters ? gridState.filters : null,
     ).subscribe(data => {
@@ -84,9 +90,9 @@ export class UpstreamJobRunsComponent implements OnDestroy {
 
   linkRenderer(model: UpstreamSummaryModel): LinkedCellRendererConfig {
     return {
-      text: `${model.buildNumber} (ob-${model.ob})`,
+      text: `${model.buildNumber} (${model.build})`,
       link: `${UPSTREAM}/${model.buildId}`,
-      subtext: formatDate(model.buildTimestamp, DATE_FORMAT, DATE_LOCALE, TIMEZONE),
+      detail: formatDate(model.buildTimestamp, DATE_FORMAT, DATE_LOCALE, TIMEZONE),
     };
   }
 
@@ -123,37 +129,30 @@ export class UpstreamJobRunsComponent implements OnDestroy {
     this.router.navigateByUrl(TESTS);
   }
 
-  weatherIcon(suite: string): string {
+  weatherIcon(suite: string): WeatherIconShape {
     let data: UpstreamSummaryModel[] = this.getGridData(suite).items.slice(0, UpstreamJobRunsComponent.NUM_BUILDS_WEATHER);
 
-    let avg = 0;
+    let avg = data.reduce((prev, cur, i, arr) => {
+      if (cur.status === BuildStatus.ABORTED) return;
 
-    data.forEach((entry, index) => {
-      if (entry.status === BuildStatus.ABORTED) return;
+      let weight = UpstreamJobRunsComponent.calculateWeight(i);
 
-      let weight = this.calculateWeight(index);
-
-      avg += UpstreamJobRunsComponent.BUILD_RESULT_MAP.get(entry.status) * weight;
-    });
+      return prev + UpstreamJobRunsComponent.BUILD_RESULT_MAP.get(cur.status) * weight;
+    }, 0);
 
     avg /= data.length;
 
     if (avg >= UpstreamJobRunsComponent.SUNNY_THRESHOLD) {
-      return SUNNY;
+      return WeatherIconShape.SUNNY;
     } else if (avg >= UpstreamJobRunsComponent.PARTLY_CLOUDY_THRESHOLD) {
-      return PARTLY_CLOUDY;
+      return WeatherIconShape.PARTLY_CLOUDY;
     } else if (avg >= UpstreamJobRunsComponent.CLOUDY_THRESHOLD) {
-      return CLOUDY;
+      return WeatherIconShape.CLOUDY;
     } else if (avg >= UpstreamJobRunsComponent.RAIN_THRESHOLD) {
-      return RAINY;
+      return WeatherIconShape.RAINY;
     } else {
-      return POURING;
+      return WeatherIconShape.POURING;
     }
-  }
-
-  private calculateWeight(index: number): number {
-    let x = index / 10;
-    return 1 - (x === 0 ? 0 : Math.pow(2, 10 * x - 10));
   }
 
 }

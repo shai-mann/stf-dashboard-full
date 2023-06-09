@@ -24,17 +24,17 @@ public class RunInfo {
 
     private int buildNumber;
 
-    private long ob;
+    private String build;
 
     public RunInfo(Status status, double duration, Date startedAt,
-                   String exception, int upstreamBuildId, int buildNumber, long ob) {
+                   String exception, int upstreamBuildId, int buildNumber, String build) {
         this.status = status;
         this.duration = duration;
         this.startedAt = startedAt;
         this.exception = exception;
         this.upstreamBuildId = upstreamBuildId;
         this.buildNumber = buildNumber;
-        this.ob = ob;
+        this.build = build;
     }
 
     public void setStatus(Status status) {
@@ -65,7 +65,7 @@ public class RunInfo {
         this.buildNumber = buildNumber;
     }
 
-    public void setOb(long ob) {
-        this.ob = ob;
+    public void setBuild(String build) {
+        this.build = build;
     }
 }

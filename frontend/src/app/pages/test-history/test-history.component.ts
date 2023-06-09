@@ -10,7 +10,7 @@ import {UpstreamRunModel} from "../../models/upstream-run.model";
 import {TestModel} from "../../models/test.model";
 import {formatDate} from "@angular/common";
 import {DATE_FORMAT, DATE_LOCALE, TIMEZONE} from "../../utils";
-import {TESTS, UPSTREAM} from "../../app-routing.module";
+import {TESTS} from "../../app-routing.module";
 
 @Component({
   selector: 'app-test-history',
@@ -33,6 +33,8 @@ export class TestHistoryComponent implements OnInit, OnDestroy {
 
   testModel$ = this.testModelSubject.asObservable();
 
+  readonly linkRenderer = this._linkRenderer.bind(this);
+
   private subscription = new Subscription();
 
   constructor(private router: Router,
@@ -41,7 +43,7 @@ export class TestHistoryComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription.add(this.route.paramMap.subscribe(params => this.testId = params.get("id")));
-    this.subscription.add(this.testRepository.getTest(this.testId).subscribe(this.testModelSubject));
+    this.subscription.add(this.testRepository.getTest$(this.testId).subscribe(this.testModelSubject));
     this.fetchGridData({ pagination: null });
   }
 
@@ -50,19 +52,12 @@ export class TestHistoryComponent implements OnInit, OnDestroy {
   }
 
   fetchGridData(gridState: GridState<UpstreamRunModel>) {
-    this.subscription.add(this.testRepository.getTestHistory(
+    this.subscription.add(this.testRepository.getTestHistory$(
       this.testId,
       gridState.pagination?.pageNumber,
       gridState.pagination?.itemsPerPage,
       gridState.filters ? gridState.filters[0] : null
     ).subscribe(this.gridDataSubject));
-  }
-
-  linkRenderer(model: UpstreamRunModel): LinkedCellRendererConfig {
-    return {
-      text: `${model.buildNumber} (ob-${model.ob})`,
-      link: `${TESTS}/${this.testId}/${model.buildId}`
-    };
   }
 
   heatMapRenderer(model: UpstreamRunModel, sddc: string): HeatmapRendererConfig {
@@ -78,6 +73,7 @@ export class TestHistoryComponent implements OnInit, OnDestroy {
         text = "Skipped";
         break;
       case Status.MISSING:
+      default:
         text = "No Data";
         break;
     }
@@ -96,6 +92,13 @@ export class TestHistoryComponent implements OnInit, OnDestroy {
 
   navigateToTestBreakdown() {
     this.router.navigateByUrl(TESTS);
+  }
+
+  private _linkRenderer(model: UpstreamRunModel): LinkedCellRendererConfig {
+    return {
+      text: `${model.buildNumber} (${model.build})`,
+      link: `${TESTS}/${this.testId}/${model.buildId}`
+    };
   }
 
 }

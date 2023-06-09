@@ -2,6 +2,15 @@
 
 This tool is intended to provide an API to easily construct views of the Jenkins CToT test runs. It does this by categorizing individual builds under "Upstream" builds.
 
+# Project Setup:
+
+1) Copy the `workflow-config-template.json` file, renaming it to `workflow-config-file.json`
+2) Enter the missing information into `workflow-config-file.json`.
+   1) If not done so, initialize a local H2 database, and make note of the username, password, and URL.
+3) Run the `database-ddl.sql` and `process-ddl.sql` files (found in `src/main/resources`).
+
+# Project Structure:
+
 ## Upstream Jobs and Upstream Builds:
 
 Upstream jobs/builds are Jenkins jobs/job runs that are linked to a single test suite (Multitenancy, VDCService-A, Networking, etc.). These jobs/builds only functionality is to trigger a run of that test suite against every available SDDC (VMC, AVS, etc.).

@@ -18,17 +18,17 @@ import java.util.Map;
 public abstract class AbstractUpstream<T> {
 
     private Integer jobId, buildId, buildNumber;
-    private Long ob, buildTimestamp;
-    private String status;
+    private Long buildTimestamp;
+    private String build, status;
 
     private Map<SddcType, T> results = new HashMap<>();
 
     public AbstractUpstream(int jobId, int buildId, int buildNumber,
-                            long ob, long buildTimestamp, String status) {
+                            String build, long buildTimestamp, String status) {
         this.jobId = jobId;
         this.buildId = buildId;
         this.buildNumber = buildNumber;
-        this.ob = ob;
+        this.build = build;
         this.buildTimestamp = buildTimestamp;
         this.status = status;
     }
@@ -45,8 +45,8 @@ public abstract class AbstractUpstream<T> {
         this.buildNumber = buildNumber;
     }
 
-    public void setOb(long ob) {
-        this.ob = ob;
+    public void setBuild(String build) {
+        this.build = build;
     }
 
     public void addResult(SddcType sddc, T result) {

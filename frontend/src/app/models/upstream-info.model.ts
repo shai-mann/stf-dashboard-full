@@ -15,7 +15,7 @@ export interface UpstreamInfoModel {
 
   buildNumber: number;
 
-  ob: number;
+  build: string;
 
   status: string;
 

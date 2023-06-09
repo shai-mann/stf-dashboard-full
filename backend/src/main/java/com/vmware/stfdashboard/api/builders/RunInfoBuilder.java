@@ -19,11 +19,11 @@ public class RunInfoBuilder {
 
     private int buildNumber;
 
-    private long ob;
+    private String build;
 
     public RunInfo build() {
         return new RunInfo(
-                status, duration, startedAt, exception, upstreamBuildId, buildNumber, ob
+                status, duration, startedAt, exception, upstreamBuildId, buildNumber, build
         );
     }
 
@@ -57,8 +57,8 @@ public class RunInfoBuilder {
         return this;
     }
 
-    public RunInfoBuilder setOb(long ob) {
-        this.ob = ob;
+    public RunInfoBuilder setBuild(String build) {
+        this.build = build;
         return this;
     }
 

@@ -8,7 +8,6 @@ import com.vmware.stfdashboard.api.meta.RunSummary;
 import com.vmware.stfdashboard.models.processed.JobBuildEntity;
 import com.vmware.stfdashboard.models.processed.UpstreamJobBuildEntity;
 import com.vmware.stfdashboard.models.processed.UpstreamJobEntity;
-import com.vmware.stfdashboard.repositories.processed.JobBuildRepository;
 import com.vmware.stfdashboard.repositories.processed.UpstreamBuildRepository;
 import com.vmware.stfdashboard.repositories.processed.UpstreamJobRepository;
 import com.vmware.stfdashboard.util.SddcType;
@@ -16,7 +15,6 @@ import com.vmware.stfdashboard.util.Status;
 import com.vmware.stfdashboard.util.SuiteType;
 import com.vmware.stfdashboard.util.Utils;
 
-import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -24,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +70,7 @@ public class BuildService {
     private List<UpstreamJobBuildEntity> getUpstreamBuildsUnformatted(SuiteType suite) {
         return getUpstreamJob(suite).getBuilds().stream().sorted(
                 (b1, b2) -> -1 * Integer.compare(b1.getBuildNumber(), b2.getBuildNumber())
-        ).toList();
+        ).collect(Collectors.toList());
     }
 
     public UpstreamInfo getUpstreamJob(int buildId) {
@@ -100,7 +100,7 @@ public class BuildService {
                 build.getUrl().toString(),
                 build.getId(),
                 build.getBuildNumber(),
-                build.getOb(),
+                build.getBuild(),
                 build.getStatus().value(),
                 new Date(build.getBuildTimestamp()),
                 numPassed,
@@ -133,7 +133,7 @@ public class BuildService {
                 .setJobId(build.getUpstreamJob().getId())
                 .setBuildId(build.getId())
                 .setBuildNumber(build.getBuildNumber())
-                .setOb(build.getOb())
+                .setBuild(build.getBuild())
                 .setBuildTimestamp(build.getBuildTimestamp())
                 .setStatus(build.getStatus().value())
                 .build();

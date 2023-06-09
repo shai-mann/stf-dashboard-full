@@ -2,8 +2,8 @@ package com.vmware.stfdashboard.util.converters;
 
 import com.vmware.stfdashboard.util.SddcType;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
 @Converter(autoApply = true)
 public class SddcMapper implements AttributeConverter<SddcType, String> {

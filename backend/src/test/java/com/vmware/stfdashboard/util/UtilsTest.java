@@ -30,8 +30,8 @@ class UtilsTest {
 
     @Test
     void extractBuildNumber() {
-        assertEquals(9283193, Utils.extractBuildNumber("CToT-CDS-GCVE-Networking #912 ob-9283193"));
+        assertEquals(9283193, Utils.extractBuild("CToT-CDS-GCVE-Networking #912 ob-9283193"));
 
-        assertEquals(21621086, Utils.extractBuildNumber("CToT-CDS-AVS-VdcService-D #52 ob-21621086"));
+        assertEquals(21621086, Utils.extractBuild("CToT-CDS-AVS-VdcService-D #52 ob-21621086"));
     }
 }

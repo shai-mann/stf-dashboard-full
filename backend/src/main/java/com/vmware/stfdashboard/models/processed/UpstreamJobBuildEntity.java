@@ -2,15 +2,15 @@ package com.vmware.stfdashboard.models.processed;
 
 import com.vmware.stfdashboard.util.Status;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.net.URL;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "UpstreamBuild", schema = "processed")
@@ -27,7 +27,7 @@ public class UpstreamJobBuildEntity {
     private int buildNumber;
 
     @Column
-    private long ob;
+    private String build;
 
     @Column
     private URL url;
@@ -42,11 +42,11 @@ public class UpstreamJobBuildEntity {
     private List<JobBuildEntity> triggeredJobs;
 
     public UpstreamJobBuildEntity(int id, UpstreamJobEntity upstreamJob, int buildNumber,
-                                  long ob, URL url, Status status, long buildTimestamp) {
+                                  String build, URL url, Status status, long buildTimestamp) {
         this.id = id;
         this.upstreamJob = upstreamJob;
         this.buildNumber = buildNumber;
-        this.ob = ob;
+        this.build = build;
         this.url = url;
         this.status = status;
         this.buildTimestamp = buildTimestamp;
@@ -66,8 +66,8 @@ public class UpstreamJobBuildEntity {
         return buildNumber;
     }
 
-    public long getOb() {
-        return ob;
+    public String getBuild() {
+        return build;
     }
 
     public URL getUrl() {

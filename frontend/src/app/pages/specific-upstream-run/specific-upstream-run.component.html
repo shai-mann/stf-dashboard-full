@@ -5,7 +5,7 @@
         <ng-container *ngIf="model$ | async as model">
           <h3 class="card-header"><a [href]="model.jobUrl" target="_blank">{{model.upstreamName}}</a></h3>
           <div class="card-block">
-            <h4 class="card-title"><a [href]="model.buildUrl" target="_blank">Build #{{model.buildNumber}} [ob-{{model.ob}}]:</a></h4>
+            <h4 class="card-title"><a [href]="model.buildUrl" target="_blank">Build #{{model.buildNumber}} [{{model.build}}]:</a></h4>
             <div class="card-text-separator">
               <div class="card-text">
                 <strong>Status:</strong> {{model.status}}
@@ -21,8 +21,8 @@
             </div>
           </div>
           <div class="card-footer" style="display: grid;">
-            <button *ngIf="hasNext(model)" class="btn btn-sm btn-link" style="justify-self: flex-start; grid-row: 1;" (click)="this.navigate(model.nextBuildId)">Next Build</button>
-            <button *ngIf="hasPrev(model)" class="btn btn-sm btn-link" style="justify-self: flex-end; grid-row: 1;" (click)="this.navigate(model.prevBuildId)">Previous Build</button>
+            <button *ngIf="hasNext(model)" class="btn btn-sm btn-link" style="justify-self: flex-start; grid-row: 1;" (click)="this.navigateToId(model.nextBuildId)">Next Build</button>
+            <button *ngIf="hasPrev(model)" class="btn btn-sm btn-link" style="justify-self: flex-end; grid-row: 1;" (click)="this.navigateToId(model.prevBuildId)">Previous Build</button>
           </div>
         </ng-container>
       </div>
@@ -35,7 +35,7 @@
                 [gridData]="getGridData(gridData)"
                 [idRenderer]="linkRenderer"
                 [resultRenderer]="heatMapRenderer"
-                [columnTitleRenderer]="columnTitleRenderer(buildSummaries)"
+                [columnTitleRenderer]="getColumnTitleRenderer(buildSummaries)"
                 [columnRenderRequest]="columnRenderRequest"
                 [cornerTitle]="cornerTitle"
                 [shouldDoStatusFiltering]="true"

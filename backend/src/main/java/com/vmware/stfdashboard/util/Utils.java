@@ -16,13 +16,7 @@ public class Utils {
     private final static Pattern sddcPattern = Pattern.compile("CToT-CDS-(\\w+)-.*");
     private final static Pattern suitePattern = Pattern.compile("CToT-CDS-\\w+-([^']*) #.*");
     private final static Pattern suiteBackup = Pattern.compile("CToT-CDS-\\w+-([^']*)");
-    private final static Pattern buildNumberPattern = Pattern.compile("#.* ob-([^']*)");
-
-    public static <T> List<T> toList(Iterable<T> iterable) {
-        List<T> out = new ArrayList<>();
-        iterable.forEach(out::add);
-        return out;
-    }
+    private final static Pattern buildNumberPattern = Pattern.compile("#.* ([s|o]b-[^']*)");
 
     public static SddcType extractSddcType(String name) {
         Matcher matcher = sddcPattern.matcher(name);
@@ -44,11 +38,11 @@ public class Utils {
         return SuiteType.findByValue(matcher.group(1).trim());
     }
 
-    public static long extractBuildNumber(String name) {
+    public static String extractBuild(String name) {
         Matcher matcher = buildNumberPattern.matcher(name);
         if (!matcher.find()) throw new IllegalArgumentException("Failed to find Build Number in name " + name);
 
-        return Long.parseLong(matcher.group(1));
+        return matcher.group(1);
     }
 
     /**

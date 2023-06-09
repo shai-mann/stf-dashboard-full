@@ -14,10 +14,10 @@ public interface TestRepository extends CrudRepository<TestEntity, Integer> {
 
     Page<TestEntity> findAllByUpstreamAndNameContainingIgnoreCase(UpstreamJobEntity upstream, String filter, Pageable pageable);
 
-    @Query("select t from TestEntity t left join TestResultEntity tr on tr.test = t where t.name ilike concat('%', ?3, '%') and t.upstream.id = ?1 and tr.build.id = ?2 and ?4 ilike concat('%', tr.status, '%') order by tr.startedAt asc")
+    @Query("select t from TestEntity t left join TestResultEntity tr on tr.test = t where upper(t.name) like upper(concat('%', ?3, '%')) and t.upstream.id = ?1 and tr.build.id = ?2 and upper(?4) like upper(concat('%', tr.status, '%')) order by tr.startedAt asc")
     Page<TestEntity> findOrderedTestsByUpstreamBuild(int upstreamBuild, int jobBuild, String filter, String status, Pageable pageable);
 
-    @Query("select t from TestEntity t left join TestResultEntity tr on tr.test = t where t.name ilike concat('%', ?3, '%') and t.upstream.id = ?1 and tr.build.id = ?2 and ?4 ilike concat('%', tr.status, '%') order by tr.startedAt desc")
+    @Query("select t from TestEntity t left join TestResultEntity tr on tr.test = t where upper(t.name) like upper(concat('%', ?3, '%')) and t.upstream.id = ?1 and tr.build.id = ?2 and upper(?4) like upper(concat('%', tr.status, '%')) order by tr.startedAt desc")
     Page<TestEntity> findOrderedTestsByUpstreamBuildDesc(int upstreamBuild, int jobBuild, String filter, String status, Pageable pageable);
 
 }

@@ -1,6 +1,6 @@
 <div style="margin: 10px">
   <ng-container *ngIf="model$ | async as model">
-    <div class="clr-row" style="justify-content: space-between; margin-bottom: 10px;">
+    <div class="clr-row app-internal-clr-row">
       <div class="clr-col-lg-9 clr-col-md-8 clr-col-12">
         <div class="card">
           <h3 class="card-header">{{model.name}}()</h3>
@@ -10,7 +10,7 @@
                 <h4 class="card-title">Parameters: {{model.parameters}}</h4>
               </div>
               <div class="card-text">
-                <strong>{{model.packagePath}}.{{model.className}}</strong>
+                <strong>{{formatClassName(model)}}</strong>
               </div>
             </div>
           </div>
@@ -26,7 +26,7 @@
             <div class="clr-col-lg-9 clr-col-md-8 clr-col-12">
               <div class="card">
                 <h3 class="card-header">
-                  <a class="id-link" [href]="navigateToUpstream(result.upstreamBuildId)">Build #{{result.buildNumber}} [ob-{{result.ob}}]</a>
+                  <a class="id-link" [href]="navigateToUpstream(result.upstreamBuildId)">Build #{{result.buildNumber}} [{{result.build}}]</a>
                 </h3>
                 <div class="card-block">
                   <div class="clr-row" style="justify-content: space-between; margin: 5px;">

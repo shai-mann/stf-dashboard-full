@@ -20,9 +20,9 @@ export interface LinkedCellRendererConfig {
   link: string;
 
   /**
-   * The subtext of this linked cell.
+   * The detail text of this linked cell.
    */
-  subtext?: string;
+  detail?: string;
 }
 
 /**

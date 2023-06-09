@@ -7,3 +7,4 @@ atlassian-ide-plugin.xml
 *.iml
 target
 .repository
+workflow-config-file.json

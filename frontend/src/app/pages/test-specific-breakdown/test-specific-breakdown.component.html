@@ -7,7 +7,7 @@
     <form clrForm>
       <clr-input-container>
         <label>Filter all</label>
-        <input clrInput placeholder="testName..."
+        <input clrInput placeholder="Test Name..."
                [name]="masterFilterTitle"
                [ngModel]="''"
                (ngModelChange)="masterFilterUpdate($event)"
@@ -16,7 +16,7 @@
     </form>
   </div>
   <clr-accordion [clrAccordionMultiPanel]="true">
-    <clr-accordion-panel *ngFor="let suite of (suiteTypes | async)" [clrAccordionPanelOpen]="shouldExpandAll">
+    <clr-accordion-panel *ngFor="let suite of (suiteTypes$ | async)" [clrAccordionPanelOpen]="shouldExpandAll">
       <clr-accordion-title>{{suite}}</clr-accordion-title>
       <clr-accordion-content>
         <app-grid (gridRefresh)="refreshGridData($event, suite)"
@@ -24,6 +24,7 @@
                   [idRenderer]="linkRenderer"
                   [resultRenderer]="heatMapRenderer"
                   [cornerTitle]="cornerTitle"
+                  [shouldAllowSddcSorting]="false"
         ></app-grid>
       </clr-accordion-content>
     </clr-accordion-panel>

@@ -15,7 +15,7 @@ export class ApiBuildRepository extends BuildRepository {
     super();
   }
 
-  getUpstreamJobs(suite: string, filter?: string[]): Observable<UpstreamSummaryModel[]> {
+  getUpstreamJobs$(suite: string, filter?: string[]): Observable<UpstreamSummaryModel[]> {
     let params = new HttpParams().set("suite", suite);
 
     if (filter) {
@@ -28,14 +28,14 @@ export class ApiBuildRepository extends BuildRepository {
     ) as Observable<UpstreamSummaryModel[]>;
   }
 
-  getUpstreamJob(id: string): Observable<UpstreamInfoModel> {
+  getUpstreamJob$(id: string): Observable<UpstreamInfoModel> {
     return this.http.get(
       this.apiBaseUrl + "builds/upstream/" + id,
       {}
     ) as Observable<UpstreamInfoModel>;
   }
 
-  getBuildSummary(id: string): Observable<Map<Sddc, BuildSummaryModel>> {
+  getBuildSummary$(id: string): Observable<Map<Sddc, BuildSummaryModel>> {
     return this.http.get(
       this.apiBaseUrl + "builds/summary/" + id,
       {}

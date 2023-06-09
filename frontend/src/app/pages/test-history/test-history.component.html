@@ -23,7 +23,7 @@
   <ng-container *ngIf="gridData$ | async as data">
     <app-grid (gridRefresh)="fetchGridData($event)"
               [gridData]="getGridData(data)"
-              [idRenderer]="linkRenderer.bind(this)"
+              [idRenderer]="linkRenderer"
               [resultRenderer]="heatMapRenderer"
               [cornerTitle]="cornerTitle"
     ></app-grid>

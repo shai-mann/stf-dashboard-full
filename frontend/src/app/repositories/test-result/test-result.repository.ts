@@ -11,28 +11,28 @@ import {TestModel} from "../../models/test.model";
  */
 export abstract class TestResultRepository {
 
-  abstract getTestResults(buildId: string,
-                          page?: number,
-                          itemsPerPage?: number,
-                          filter?: string[],
-                          orderingColumn?: string,
-                          reversed?: boolean): Observable<PageModel<TestInfoModel>>;
+  abstract getTestResults$(buildId: string,
+                           page?: number,
+                           itemsPerPage?: number,
+                           filter?: string[],
+                           orderingColumn?: string,
+                           reversed?: boolean): Observable<PageModel<TestInfoModel>>;
 
-  abstract getTestSummaries(suite: string,
-                            page?: number,
-                            itemsPerPage?: number,
-                            filter?: string): Observable<PageModel<TestSummaryModel>>;
+  abstract getTestSummaries$(suite: string,
+                             page?: number,
+                             itemsPerPage?: number,
+                             filter?: string): Observable<PageModel<TestSummaryModel>>;
 
-  abstract getTestRuns(id: string,
-                       buildId?: string): Observable<TestInfoListModel>;
+  abstract getTestRuns$(id: string,
+                        buildId?: string): Observable<TestInfoListModel>;
 
-  abstract getTestHistory(id: string,
-                          page?: number,
-                          itemsPerPage?: number,
-                          filter?: string,
-                          orderingColumn?: string,
-                          reversed?: boolean): Observable<PageModel<UpstreamRunModel>>;
+  abstract getTestHistory$(id: string,
+                           page?: number,
+                           itemsPerPage?: number,
+                           filter?: string,
+                           orderingColumn?: string,
+                           reversed?: boolean): Observable<PageModel<UpstreamRunModel>>;
 
-  abstract getTest(id: string): Observable<TestModel>;
+  abstract getTest$(id: string): Observable<TestModel>;
 
 }

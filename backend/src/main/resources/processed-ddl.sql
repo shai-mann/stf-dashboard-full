@@ -18,7 +18,7 @@ create table UpstreamBuild (
     id identity primary key,
     upstreamJob int not null references UpstreamJob (id),
     buildNumber bigint not null,
-    ob bigint not null,
+    build varchar(64) not null,
     url varchar(256) not null,
     status varchar(128) not null,
     buildTimestamp bigint not null

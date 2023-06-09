@@ -1,0 +1,15 @@
+{
+  "databaseDriverFile": "PATH_TO_H2_JAR_FILE",
+  "databaseUrl": "DATABASE_URL;AUTO_SERVER=TRUE",
+  "commitComparisonUrl": "https://gitlab.eng.vmware.com/core-build/cloud/compare/(first)...(second)?view=parallel",
+  "jenkinsUrl": "https://vcd-cloud-cd.svc.eng.vmware.com",
+  "jenkinsView": "CToT",
+  "databaseUsername": "H2_USERNAME",
+  "databasePassword": "H2_PASSWORD",
+  "databaseDriverClass": "org.h2.Driver",
+  "maxJenkinsBuildsToCheck": 7,
+  "testReportsUrlOverrides": {
+    "cypress-result.txt": "testReport/api/json"
+  },
+  "testMethodNameSearchUrl": "search.html?cgiEndpoint=cdsSearch.cgi"
+}

@@ -20,12 +20,12 @@ export class ApiTestResultRepository extends TestResultRepository {
     super();
   }
 
-  getTestResults(buildId: string,
-                 page?: number,
-                 itemsPerPage?: number,
-                 filter?: string[],
-                 orderingColumn?: string,
-                 reversed?: boolean): Observable<PageModel<TestInfoModel>> {
+  getTestResults$(buildId: string,
+                  page?: number,
+                  itemsPerPage?: number,
+                  filter?: string[],
+                  orderingColumn?: string,
+                  reversed?: boolean): Observable<PageModel<TestInfoModel>> {
     let params = this.optionalAppend(["buildId", "page", "itemsPerPage", "orderingColumn", "reversed"],
       [buildId, page, itemsPerPage, orderingColumn, reversed]);
 
@@ -39,10 +39,10 @@ export class ApiTestResultRepository extends TestResultRepository {
     ) as Observable<PageModel<TestInfoModel>>;
   }
 
-  getTestSummaries(suite: string,
-                   page?: number,
-                   itemsPerPage?: number,
-                   filter?: string): Observable<PageModel<TestSummaryModel>> {
+  getTestSummaries$(suite: string,
+                    page?: number,
+                    itemsPerPage?: number,
+                    filter?: string): Observable<PageModel<TestSummaryModel>> {
     let params = this.optionalAppend(["suite", "page", "itemsPerPage", "filter"],
       [suite, page, itemsPerPage, filter]);
 
@@ -52,8 +52,8 @@ export class ApiTestResultRepository extends TestResultRepository {
     ) as Observable<PageModel<TestSummaryModel>>;
   }
 
-  getTestRuns(id: string,
-              buildId?: string): Observable<TestInfoListModel> {
+  getTestRuns$(id: string,
+               buildId?: string): Observable<TestInfoListModel> {
     let params = this.optionalAppend(["id", "build"], [id, buildId]);
 
     return this.http.get(
@@ -62,12 +62,12 @@ export class ApiTestResultRepository extends TestResultRepository {
     ) as Observable<TestInfoListModel>;
   }
 
-  getTestHistory(id: string,
-                 page?: number,
-                 itemsPerPage?: number,
-                 filter?: string,
-                 orderingColumn?: string,
-                 reversed?: boolean): Observable<PageModel<UpstreamRunModel>> {
+  getTestHistory$(id: string,
+                  page?: number,
+                  itemsPerPage?: number,
+                  filter?: string,
+                  orderingColumn?: string,
+                  reversed?: boolean): Observable<PageModel<UpstreamRunModel>> {
     let params = this.optionalAppend(["id", "page", "itemsPerPage", "filter", "orderingColumn", "reversed"],
       [id, page, itemsPerPage, filter, orderingColumn, reversed]);
 
@@ -77,7 +77,7 @@ export class ApiTestResultRepository extends TestResultRepository {
     ) as Observable<PageModel<UpstreamRunModel>>;
   }
 
-  getTest(id: string): Observable<TestModel> {
+  getTest$(id: string): Observable<TestModel> {
     return this.http.get(
       this.apiBaseUrl + "tests?id=" + id,
       {}

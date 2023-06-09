@@ -2,13 +2,13 @@ package com.vmware.stfdashboard.models.processed;
 
 import com.vmware.stfdashboard.util.SuiteType;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import java.net.URL;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "UpstreamJob", schema = "processed")

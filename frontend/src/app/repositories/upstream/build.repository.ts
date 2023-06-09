@@ -14,18 +14,18 @@ export abstract class BuildRepository {
    * @param suite the suite to find upstream jobs for.
    * @param filter the FIQL filters applied to this query.
    */
-  abstract getUpstreamJobs(suite: String, filter?: string[]): Observable<UpstreamSummaryModel[]>;
+  abstract getUpstreamJobs$(suite: String, filter?: string[]): Observable<UpstreamSummaryModel[]>;
 
   /**
    * Gets more information about a given specific upstream job.
    * @param id the ID of the upstream job to find details on.
    */
-  abstract getUpstreamJob(id: string): Observable<UpstreamInfoModel>;
+  abstract getUpstreamJob$(id: string): Observable<UpstreamInfoModel>;
 
   /**
    * Gets the number of tests under a given build with a given status. The build id is an upstream build id.
    * @param id the build id.
    */
-  abstract getBuildSummary(id: string): Observable<Map<Sddc, BuildSummaryModel>>;
+  abstract getBuildSummary$(id: string): Observable<Map<Sddc, BuildSummaryModel>>;
 
 }

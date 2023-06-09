@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GridDataFetchResult, GridState} from "@vcd/ui-components";
-import {BehaviorSubject, debounce, debounceTime, Observable, Subscription} from "rxjs";
+import {BehaviorSubject, combineLatest, debounceTime, Observable, Subscription, switchMap} from "rxjs";
 import {ApplicationRepository} from "../../repositories/application/application.repository";
 import {LinkedCellRendererConfig} from "../../components/renderers/linked-cell-renderer/linked-cell-renderer";
 import {HeatmapRendererConfig, Status} from "../../components/renderers/heatmap-renderer/heatmap-renderer";
@@ -8,7 +8,6 @@ import {TestResultRepository} from "../../repositories/test-result/test-result.r
 import {TestSummaryModel} from "../../models/test-summary.model";
 import {Router} from "@angular/router";
 import {HOME, TEST_HISTORY} from "../../app-routing.module";
-import {GridComponent} from "../../components/grid/grid.component";
 
 @Component({
   selector: 'app-test-specific-breakdown',
@@ -30,7 +29,7 @@ export class TestSpecificBreakdownComponent implements OnDestroy, OnInit {
 
   private subscription = new Subscription();
 
-  private gridStateCache: GridState<TestSummaryModel>;
+  private gridStateCache = new BehaviorSubject<GridState<TestSummaryModel>>({ pagination: null });
 
   private masterFilterObservable = new BehaviorSubject("");
 
@@ -39,11 +38,12 @@ export class TestSpecificBreakdownComponent implements OnDestroy, OnInit {
               private applicationRepository: ApplicationRepository) {}
 
   ngOnInit() {
-    this.subscription.add(this.masterFilterObservable.pipe(debounceTime(500)).subscribe(filter => {
-      this.subscription.add(this.suiteTypes.subscribe(suites => {
-        suites.forEach(s => this.refreshGridData(this.gridStateCache || { pagination: null }, s as string));
-        this.shouldExpandAll = !!filter;
-      }));
+    this.subscription.add(combineLatest(
+      this.masterFilterObservable.pipe(debounceTime(500)),
+      this.suiteTypes$
+    ).subscribe(([filter, suites]) => {
+      suites.forEach(s => this.refreshGridData(this.gridStateCache.getValue(), s as string));
+      this.shouldExpandAll = !!filter;
     }));
   }
 
@@ -51,27 +51,12 @@ export class TestSpecificBreakdownComponent implements OnDestroy, OnInit {
     this.subscription.unsubscribe();
   }
 
-  get suiteTypes(): Observable<String[]> {
-    return this.applicationRepository.getSuiteTypes();
+  get suiteTypes$(): Observable<String[]> {
+    return this.applicationRepository.getSuiteTypes$();
   }
 
   refreshGridData(gridState: GridState<TestSummaryModel>, suite: string) {
     return this._refreshGridData(gridState, suite);
-  }
-
-  private _refreshGridData(gridState: GridState<TestSummaryModel>, suite: string) {
-    this.gridStateCache = gridState;
-    this.subscription.add(this.testRepository.getTestSummaries(
-      suite,
-      gridState.pagination?.pageNumber,
-      gridState.pagination?.itemsPerPage,
-      this.getFilters(gridState)
-    ).subscribe(data => {
-      this.gridData.set(suite, {
-        items: data.content,
-        totalItems: data.totalElements
-      });
-    }));
   }
 
   linkRenderer(model: TestSummaryModel): LinkedCellRendererConfig {
@@ -108,6 +93,21 @@ export class TestSpecificBreakdownComponent implements OnDestroy, OnInit {
 
   masterFilterUpdate(event) {
     this.masterFilterObservable.next(event);
+  }
+
+  private _refreshGridData(gridState: GridState<TestSummaryModel>, suite: string) {
+    this.gridStateCache.next(gridState);
+    this.subscription.add(this.testRepository.getTestSummaries$(
+      suite,
+      gridState.pagination?.pageNumber,
+      gridState.pagination?.itemsPerPage,
+      this.getFilters(gridState)
+    ).subscribe(data => {
+      this.gridData.set(suite, {
+        items: data.content,
+        totalItems: data.totalElements
+      });
+    }));
   }
 
   private getFilters(gridState: GridState<TestSummaryModel>): string {

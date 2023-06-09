@@ -4,10 +4,10 @@
     <button class="btn" (click)="navigateToTestBreakdown()">Test View</button>
   </div>
   <clr-accordion [clrAccordionMultiPanel]="true">
-    <clr-accordion-panel *ngFor="let suite of (suiteTypes | async)">
+    <clr-accordion-panel *ngFor="let suite of (suiteTypes$ | async)">
       <clr-accordion-title>
         {{suite}}
-        <cds-icon [attr.status]="'info'" [attr.shape]="weatherIcon(suite)" [attr.size]="25" style="margin: 5px" />
+        <weather-icon [state]="weatherIcon(suite)" />
       </clr-accordion-title>
       <clr-accordion-content>
         <app-grid (gridRefresh)="fetchGridData($event, suite)"

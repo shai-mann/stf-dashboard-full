@@ -25,11 +25,13 @@ import {TestSpecificBreakdownComponent} from './pages/test-specific-breakdown/te
 import {TestHistoryComponent} from './pages/test-history/test-history.component';
 import {CdsModule} from "@cds/angular";
 import {FormsModule} from "@angular/forms";
+import {WeatherIconComponent} from "./components/weather-icon/weather-icon.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     GridComponent,
+    WeatherIconComponent,
     HeatMapRendererComponent,
     LinkedCellRendererComponent,
     UpstreamJobRunsComponent,

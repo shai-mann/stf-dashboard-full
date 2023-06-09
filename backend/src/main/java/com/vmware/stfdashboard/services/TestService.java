@@ -21,7 +21,6 @@ import com.vmware.stfdashboard.util.SddcType;
 import com.vmware.stfdashboard.util.Status;
 import com.vmware.stfdashboard.util.Utils;
 
-import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -84,7 +84,7 @@ public class TestService {
         out.forEach(t -> {
             for (SddcType sddc : SddcType.values()) {
                 List<JobBuildEntity> subBuilds = builds.stream().filter(b ->
-                        b.getJob().getSddc().equals(sddc)).toList();
+                        b.getJob().getSddc().equals(sddc)).collect(Collectors.toList());
 
                 int passedCount = testResultRepository.countByTest_IdAndBuildInAndStatus(t.getId(),
                         subBuilds, Status.PASSED.value());
@@ -150,7 +150,7 @@ public class TestService {
                 .setJobId(build.getUpstreamJob().getId())
                 .setBuildId(build.getId())
                 .setBuildNumber(build.getBuildNumber())
-                .setOb(build.getOb())
+                .setBuild(build.getBuild())
                 .setBuildTimestamp(build.getBuildTimestamp())
                 .setStatus(build.getStatus().value())
                 .build();
@@ -270,7 +270,7 @@ public class TestService {
                 .setException(tr.getException())
                 .setUpstreamBuildId(b.getUpstreamBuild().getId())
                 .setBuildNumber(b.getBuildNumber())
-                .setOb(b.getUpstreamBuild().getOb())
+                .setBuild(b.getUpstreamBuild().getBuild())
                 .build();
     }
 

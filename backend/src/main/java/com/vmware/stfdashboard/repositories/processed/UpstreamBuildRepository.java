@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UpstreamBuildRepository extends CrudRepository<UpstreamJobBuildEntity, Integer> {
 
-    Optional<UpstreamJobBuildEntity> findFirstByUpstreamJobAndObAndBuildTimestampLessThanEqualOrderByBuildNumberDesc(
-            UpstreamJobEntity upstream, long ob, long buildTimestamp
+    Optional<UpstreamJobBuildEntity> findFirstByUpstreamJobAndBuildAndBuildTimestampLessThanEqualOrderByBuildNumberDesc(
+            UpstreamJobEntity upstream, String build, long buildTimestamp
     );
 
 }
