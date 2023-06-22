@@ -10,6 +10,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class linked to the processed UpstreamJob table, containing
+ * definitions for the types of Upstream jobs that exist. Each Upstream job is linked to
+ * a single {@link SuiteType}.
+ *
+ * <p>Upstream jobs have links to the list of {@link UpstreamJobBuildEntity} that are builds of
+ * that specific Upstream job. They also have links to the {@link TestEntity} that are tests in
+ * the linked {@link SuiteType} of this Upstream job.</p>
+ */
 @Entity
 @Table(name = "UpstreamJob", schema = "processed")
 public class UpstreamJobEntity {

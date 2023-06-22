@@ -18,6 +18,19 @@ import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 import org.springframework.util.StringUtils;
 
+/**
+ * An {@link Entity} class linked to the Jenkins TestResult table. TestResults contain
+ * information about a specific test run in a specific Job Build. However,
+ * this table is aggregated strangely (by nature of how the Workflow tools project
+ * scrapes Jenkins data). Aggregation appears to be done based on test type (which is uniquely
+ * identified by a combination of {@code name}, {@code packagePath}, {@code className},
+ * and {@code dataProviderIndex}.
+ *
+ * <p>The {@code dataProviderIndex} is a way of uniquely separating the different types of tests
+ * with the same name - since sometimes a test is run multiple times with different
+ * {@code parameters}. The workflow tools notates the data provider index as either null (a stand
+ * in for 0) or an incrementing number unique to that test. </p>
+ */
 @Entity
 @Table(name = "test_result", schema = "public")
 @TypeDefs({

@@ -1,5 +1,16 @@
 package com.vmware.stfdashboard.util;
 
+import com.vmware.stfdashboard.models.generated.JenkinsTestResult;
+import com.vmware.stfdashboard.models.processed.JobBuildEntity;
+import com.vmware.stfdashboard.models.processed.TestResultEntity;
+
+/**
+ * An enum containing Status types supported by this project. The status types are divided
+ * between the statuses available for {@link TestResultEntity} (originally sourced from
+ * {@link JenkinsTestResult} objects), and statuses available for {@link JobBuildEntity}.
+ *
+ * <p>Both are contained in the same enum, but not for any particular design reason.</p>
+ */
 public enum Status {
     /* Test Result Status Options */
     FAILED("FAIL"),

@@ -12,6 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class linked to the processed UpstreamBuild table, containing builds of
+ * the {@link UpstreamJobEntity} table.
+ *
+ * <p>UpstreamBuilds have links to the {@link UpstreamJobEntity} that they are a build of and the
+ * list of {@link JobBuildEntity} that they triggered during the run.</p>
+ */
 @Entity
 @Table(name = "UpstreamBuild", schema = "processed")
 public class UpstreamJobBuildEntity {

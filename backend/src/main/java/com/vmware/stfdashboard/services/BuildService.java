@@ -4,7 +4,11 @@ import com.vmware.stfdashboard.api.BuildSummary;
 import com.vmware.stfdashboard.api.UpstreamInfo;
 import com.vmware.stfdashboard.api.UpstreamSummary;
 import com.vmware.stfdashboard.api.builders.AbstractUpstreamBuilder;
+import com.vmware.stfdashboard.api.builders.BuildSummaryBuilder;
+import com.vmware.stfdashboard.api.builders.RunSummaryBuilder;
+import com.vmware.stfdashboard.api.builders.UpstreamInfoBuilder;
 import com.vmware.stfdashboard.api.meta.RunSummary;
+import com.vmware.stfdashboard.controllers.BuildController;
 import com.vmware.stfdashboard.models.processed.JobBuildEntity;
 import com.vmware.stfdashboard.models.processed.UpstreamJobBuildEntity;
 import com.vmware.stfdashboard.models.processed.UpstreamJobEntity;
@@ -27,6 +31,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * A {@link Service} containing the logic behind the endpoints of the {@link BuildController}.
+ * Contains a dependency for the {@link TestService}.
+ */
 @Service
 @Transactional
 public class BuildService {
@@ -93,22 +101,22 @@ public class BuildService {
         int numSkipped = testService.countByStatus(build, Status.SKIPPED);
         int numFailed = testService.countByStatus(build, Status.FAILED);
 
-        return new UpstreamInfo(
-                build.getUpstreamJob().getId(),
-                build.getUpstreamJob().getName(),
-                build.getUpstreamJob().getUrl().toString(),
-                build.getUrl().toString(),
-                build.getId(),
-                build.getBuildNumber(),
-                build.getBuild(),
-                build.getStatus().value(),
-                new Date(build.getBuildTimestamp()),
-                numPassed,
-                numSkipped,
-                numFailed,
-                nextBuild.map(UpstreamJobBuildEntity::getId),
-                prevBuild.map(UpstreamJobBuildEntity::getId)
-            );
+        return new UpstreamInfoBuilder()
+                .setJobId(build.getUpstreamJob().getId())
+                .setUpstreamName(build.getUpstreamJob().getName())
+                .setJobUrl(build.getUpstreamJob().getUrl().toString())
+                .setBuildUrl(build.getUrl().toString())
+                .setBuildId(build.getId())
+                .setBuildNumber(build.getBuildNumber())
+                .setBuild(build.getBuild())
+                .setStatus(build.getStatus().value())
+                .setBuildTimestamp(new Date(build.getBuildTimestamp()))
+                .setNumPassed(numPassed)
+                .setNumSkipped(numSkipped)
+                .setNumFailed(numFailed)
+                .setNextBuildId(nextBuild.map(UpstreamJobBuildEntity::getId))
+                .setPrevBuildId(prevBuild.map(UpstreamJobBuildEntity::getId))
+                .build();
     }
 
     public UpstreamJobBuildEntity getUpstreamBuild(int upstreamBuild) {
@@ -145,19 +153,15 @@ public class BuildService {
     }
 
     private static RunSummary fromJobBuildEntity(JobBuildEntity build) {
-        RunSummary out = new RunSummary();
+        RunSummaryBuilder out = new RunSummaryBuilder();
 
         if (build.getFailedCount() > 0) {
-            out.setStatus(Status.FAILED);
-            out.setAmount(build.getFailedCount());
+            out.setStatus(Status.FAILED).setAmount(build.getFailedCount());
         } else if (build.getSkippedCount() > 0) {
-            out.setStatus(Status.SKIPPED);
-            out.setAmount(build.getSkippedCount());
-        } else {
-            out.setStatus(Status.PASSED);
+            out.setStatus(Status.SKIPPED).setAmount(build.getSkippedCount());
         }
 
-        return out;
+        return out.build();
     }
 
     public Map<SddcType, BuildSummary> getBuildSummary(int id) {
@@ -165,11 +169,11 @@ public class BuildService {
 
         upstreamBuildRepository.findById(id).orElseThrow().getTriggeredJobs().forEach(b -> out.put(
                 b.getJob().getSddc(),
-                new BuildSummary(
-                        testService.countByStatus(b, Status.PASSED),
-                        testService.countByStatus(b, Status.SKIPPED),
-                        testService.countByStatus(b, Status.FAILED)
-                )
+                new BuildSummaryBuilder()
+                        .setPassed(testService.countByStatus(b, Status.PASSED))
+                        .setSkipped(testService.countByStatus(b, Status.SKIPPED))
+                        .setFailed(testService.countByStatus(b, Status.FAILED))
+                        .build()
         ));
 
         return out;

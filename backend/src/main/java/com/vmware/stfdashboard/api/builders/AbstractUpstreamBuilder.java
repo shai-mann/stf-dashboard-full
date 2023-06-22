@@ -2,6 +2,8 @@ package com.vmware.stfdashboard.api.builders;
 
 import com.vmware.stfdashboard.api.UpstreamRun;
 import com.vmware.stfdashboard.api.UpstreamSummary;
+import com.vmware.stfdashboard.api.meta.AbstractTest;
+import com.vmware.stfdashboard.api.meta.AbstractUpstream;
 import com.vmware.stfdashboard.api.meta.RunInfo;
 import com.vmware.stfdashboard.api.meta.RunSummary;
 import com.vmware.stfdashboard.util.SddcType;
@@ -9,6 +11,13 @@ import com.vmware.stfdashboard.util.SddcType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An abstract builder for {@link AbstractUpstream} subclasses.
+ * @param <E> The type of {@link AbstractUpstream} to build.
+ * @param <T> The data type of the results inside the class being built.
+ * @see RunInfo
+ * @see RunSummary
+ */
 public abstract class AbstractUpstreamBuilder<E, T> {
 
     protected Integer jobId, buildId, buildNumber;

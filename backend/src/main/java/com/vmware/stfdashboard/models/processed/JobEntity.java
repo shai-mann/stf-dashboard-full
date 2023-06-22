@@ -1,6 +1,7 @@
 package com.vmware.stfdashboard.models.processed;
 
 import com.vmware.stfdashboard.util.SddcType;
+import com.vmware.stfdashboard.util.SuiteType;
 
 import java.net.URL;
 import javax.persistence.Column;
@@ -12,6 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class linked to the processed Job table, containing categories of Jobs.
+ * These jobs are distinct from {@link UpstreamJobEntity},
+ * since these Jobs are a single {@link SuiteType} against a single {@link SddcType}.
+ *
+ * <p>Jobs have links to the {@link UpstreamJobEntity} that is linked to the {@link SuiteType}
+ * that this Job uses.</p>
+ */
 @Entity
 @Table(name = "Job", schema = "processed")
 public class JobEntity {

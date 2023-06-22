@@ -8,8 +8,12 @@ import com.vmware.stfdashboard.api.UpstreamRun;
 import com.vmware.stfdashboard.api.builders.AbstractTestBuilder;
 import com.vmware.stfdashboard.api.builders.AbstractUpstreamBuilder;
 import com.vmware.stfdashboard.api.builders.RunInfoBuilder;
+import com.vmware.stfdashboard.api.builders.RunSummaryBuilder;
+import com.vmware.stfdashboard.api.builders.TestBuilder;
 import com.vmware.stfdashboard.api.meta.RunInfo;
 import com.vmware.stfdashboard.api.meta.RunSummary;
+import com.vmware.stfdashboard.controllers.BuildController;
+import com.vmware.stfdashboard.controllers.TestController;
 import com.vmware.stfdashboard.models.processed.JobBuildEntity;
 import com.vmware.stfdashboard.models.processed.TestEntity;
 import com.vmware.stfdashboard.models.processed.TestResultEntity;
@@ -36,6 +40,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+/**
+ * A {@link Service} containing the logic behind the endpoints of the {@link TestController}.
+ */
 @Service
 @Transactional
 public class TestService {
@@ -90,7 +97,12 @@ public class TestService {
                         subBuilds, Status.PASSED.value());
                 int total = testResultRepository.countByTest_IdAndBuildIn(t.getId(), subBuilds);
 
-                t.addResult(sddc, new RunSummary(passedCount, total, Status.PASSED));
+                t.addResult(sddc, new RunSummaryBuilder()
+                        .setAmount(passedCount)
+                        .setTotal(total)
+                        .setStatus(Status.PASSED)
+                        .build()
+                );
             }
         });
 
@@ -127,8 +139,12 @@ public class TestService {
 
     public Test getTest(int id) {
         TestEntity entity = this.getTestById(id);
-        return new Test(entity.getId(), entity.getName(), entity.getParameters(),
-                entity.getUpstream().getSuite().value());
+        return new TestBuilder()
+                .setId(entity.getId())
+                .setName(entity.getName())
+                .setParameters(entity.getParameters())
+                .setSuite(entity.getUpstream().getSuite().value())
+                .build();
     }
 
     /* HELPERS */

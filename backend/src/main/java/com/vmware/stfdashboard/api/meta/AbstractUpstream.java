@@ -1,5 +1,6 @@
 package com.vmware.stfdashboard.api.meta;
 
+import com.vmware.stfdashboard.models.processed.UpstreamJobEntity;
 import com.vmware.stfdashboard.util.SddcType;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -8,7 +9,7 @@ import java.util.Map;
 
 /**
  * An API model containing information about the runs of a single
- * {@link com.vmware.stfdashboard.models.processed.UpstreamJobEntity}.
+ * {@link UpstreamJobEntity}.
  * @param <T> the data type to summarize a single run of a triggered job by the upstream.
  * @see RunInfo
  * @see RunSummary

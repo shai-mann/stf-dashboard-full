@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import org.springframework.util.StreamUtils;
 
+/**
+ * A subclass of {@link HttpServletRequestWrapper} that can be used in the
+ * {@link RequestCachingFilter} to catch and log API requests.
+ */
 public class CachedHttpServletRequest extends HttpServletRequestWrapper {
 
     private byte[] cachedPayload;

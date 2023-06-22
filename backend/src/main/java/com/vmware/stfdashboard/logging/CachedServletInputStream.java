@@ -8,6 +8,10 @@ import javax.servlet.ServletInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * An extension of the {@link ServletInputStream} class that can be used in the
+ * {@link RequestCachingFilter} to log API requests.
+ */
 public class CachedServletInputStream extends ServletInputStream {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(CachedServletInputStream.class);

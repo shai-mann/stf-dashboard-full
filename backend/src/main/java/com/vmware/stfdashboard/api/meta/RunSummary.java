@@ -5,7 +5,7 @@ import com.vmware.stfdashboard.util.Status;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 /**
- * Summarzies many runs of a single test, allowing the information to be formatted
+ * Summarizes many runs of a single test, allowing the information to be formatted
  * like "10/17 Passed" or "12/12 Skipped."
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)

@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 
+/**
+ * A utilities class with useful project-wide helper methods.
+ */
 public class Utils {
 
     private final static Logger logger = LoggerFactory.getLogger(Utils.class);

@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * A {@link RestController} that handles application-level endpoints. This encompasses any
+ * endpoints that are general use, and not specific to the scopes of other controllers.
+ */
 @CrossOrigin
 @RestController
 public class ApplicationController {

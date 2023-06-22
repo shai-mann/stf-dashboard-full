@@ -10,6 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class connected to the Jenkins JobBuilds table. Job builds are a build of
+ * an {@link JenkinsJob}, and represent a run of that build. The run therefore has a lot of linked
+ * {@link JenkinsTestResult} data.
+ */
 @Entity
 @Table(name = "job_build", schema = "public")
 public class JenkinsJobBuild {

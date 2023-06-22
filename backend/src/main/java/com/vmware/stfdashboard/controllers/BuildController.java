@@ -3,6 +3,8 @@ package com.vmware.stfdashboard.controllers;
 import com.vmware.stfdashboard.api.BuildSummary;
 import com.vmware.stfdashboard.api.UpstreamInfo;
 import com.vmware.stfdashboard.api.UpstreamSummary;
+import com.vmware.stfdashboard.models.processed.JobEntity;
+import com.vmware.stfdashboard.models.processed.UpstreamJobEntity;
 import com.vmware.stfdashboard.services.BuildService;
 import com.vmware.stfdashboard.util.SddcType;
 import com.vmware.stfdashboard.util.SuiteType;
@@ -19,6 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * A {@link RestController} that defines endpoints related to the {@link UpstreamJobEntity}
+ * or {@link JobEntity}.
+ * @see BuildService
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/builds")

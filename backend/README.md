@@ -7,7 +7,9 @@ This tool is intended to provide an API to easily construct views of the Jenkins
 1) Copy the `workflow-config-template.json` file, renaming it to `workflow-config-file.json`
 2) Enter the missing information into `workflow-config-file.json`.
    1) If not done so, initialize a local H2 database, and make note of the username, password, and URL.
-3) Run the `database-ddl.sql` and `process-ddl.sql` files (found in `src/main/resources`).
+3) Copy the `.env-dev` file, renaming it to `.env`
+   1) Add the missing values.
+4) Run the `database-ddl.sql` and `process-ddl.sql` files (found in `src/main/resources`).
 
 # Project Structure:
 

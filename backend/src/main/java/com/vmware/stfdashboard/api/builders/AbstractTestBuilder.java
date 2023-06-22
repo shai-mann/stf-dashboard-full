@@ -3,6 +3,7 @@ package com.vmware.stfdashboard.api.builders;
 import com.vmware.stfdashboard.api.TestRun;
 import com.vmware.stfdashboard.api.TestRunList;
 import com.vmware.stfdashboard.api.TestSummary;
+import com.vmware.stfdashboard.api.meta.AbstractTest;
 import com.vmware.stfdashboard.api.meta.RunInfo;
 import com.vmware.stfdashboard.api.meta.RunSummary;
 import com.vmware.stfdashboard.util.SddcType;
@@ -10,6 +11,13 @@ import com.vmware.stfdashboard.util.SddcType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An abstract builder for {@link AbstractTest} subclasses.
+ * @param <E> The type of {@link AbstractTest} to build.
+ * @param <T> The data type of the results inside the class being built.
+ * @see RunInfo
+ * @see RunSummary
+ */
 public abstract class AbstractTestBuilder<E, T> {
 
     protected Integer id;

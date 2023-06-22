@@ -8,3 +8,5 @@ atlassian-ide-plugin.xml
 target
 .repository
 workflow-config-file.json
+.env
+application-dev.properties

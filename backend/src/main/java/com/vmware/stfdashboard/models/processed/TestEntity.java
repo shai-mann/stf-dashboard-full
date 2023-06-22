@@ -1,5 +1,8 @@
 package com.vmware.stfdashboard.models.processed;
 
+import com.vmware.stfdashboard.processing.Processor;
+import com.vmware.stfdashboard.util.SuiteType;
+
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +15,16 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class linked to the processed Tests table, containing types of tests
+ * that exist in the various {@link SuiteType}. This data is parsed in the {@link Processor}
+ * to extract unique test types (without results) from the list of test results in the unprocessed
+ * schema.
+ *
+ * <p>Tests have links to the {@link UpstreamJobEntity} that is linked to the same {@link SuiteType}
+ * that the test is under. It also links to the {@link TestResultEntity} data for runs of this
+ * test.</p>
+ */
 @Entity
 @Table(name = "test", schema = "processed")
 public class TestEntity {

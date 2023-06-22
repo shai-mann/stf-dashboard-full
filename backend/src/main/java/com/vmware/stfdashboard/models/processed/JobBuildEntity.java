@@ -1,6 +1,8 @@
 package com.vmware.stfdashboard.models.processed;
 
+import com.vmware.stfdashboard.util.SddcType;
 import com.vmware.stfdashboard.util.Status;
+import com.vmware.stfdashboard.util.SuiteType;
 
 import java.net.URL;
 import java.util.List;
@@ -12,6 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class linked to the processed JobBuild table, containing builds of
+ * the {@link JobEntity} jobs. These job builds are distinct from {@link UpstreamJobBuildEntity},
+ * since these JobBuilds are only a run of a single {@link SuiteType} against a single
+ * {@link SddcType}.
+ *
+ * <p>JobBuilds have links to the {@link JobEntity} that they are a build of, the
+ * {@link UpstreamJobBuildEntity} that triggered them, and the {@link TestResultEntity} objects
+ * containing the results of tests in this build.</p>
+ */
 @Entity
 @Table(name = "JobBuild", schema = "processed")
 public class JobBuildEntity {

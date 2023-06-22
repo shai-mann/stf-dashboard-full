@@ -5,6 +5,8 @@ import com.vmware.stfdashboard.api.TestRun;
 import com.vmware.stfdashboard.api.TestRunList;
 import com.vmware.stfdashboard.api.TestSummary;
 import com.vmware.stfdashboard.api.UpstreamRun;
+import com.vmware.stfdashboard.models.processed.TestEntity;
+import com.vmware.stfdashboard.models.processed.TestResultEntity;
 import com.vmware.stfdashboard.models.processed.UpstreamJobBuildEntity;
 import com.vmware.stfdashboard.services.BuildService;
 import com.vmware.stfdashboard.services.TestService;
@@ -21,6 +23,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * A {@link RestController} that defines endpoints related to the {@link TestEntity}
+ * or {@link TestResultEntity}.
+ * @see TestService
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/tests")

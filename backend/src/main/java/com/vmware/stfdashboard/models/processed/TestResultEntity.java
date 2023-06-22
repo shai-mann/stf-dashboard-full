@@ -10,6 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * An {@link Entity} class linked to the processed TestResult table, containing runs of
+ * the {@link TestEntity} table.
+ *
+ * <p>TestResults have links to the {@link TestEntity} that they are a run of and the
+ * {@link JobBuildEntity} that triggered them.</p>
+ */
 @Entity
 @Table(name = "TestResult", schema = "processed")
 public class TestResultEntity {

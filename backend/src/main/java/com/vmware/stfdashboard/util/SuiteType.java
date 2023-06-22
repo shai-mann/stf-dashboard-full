@@ -1,5 +1,8 @@
 package com.vmware.stfdashboard.util;
 
+/**
+ * An enum containing the test suites supported by this project.
+ */
 public enum SuiteType {
     SMOKE("Smoke"),
     VDC_SERVICE_A("VdcService-A"),

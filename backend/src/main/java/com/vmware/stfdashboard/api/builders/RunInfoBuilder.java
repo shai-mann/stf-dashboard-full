@@ -5,6 +5,9 @@ import com.vmware.stfdashboard.util.Status;
 
 import java.util.Date;
 
+/**
+ * A builder for the {@link RunInfo} class.
+ */
 public class RunInfoBuilder {
 
     private Status status;

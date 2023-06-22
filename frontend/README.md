@@ -1,27 +1,15 @@
 # StfDashboardUi
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.8.
+# Project Backend URL
 
-## Development server
+This project provides the API url in the `app.module.ts` file - the token is defined in the `tokens.ts` file, but the actual value is provided in the module definition.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+# General Project Structure
 
-## Code scaffolding
+The project is generally laid out similarly to the backend - repositories to communicate with the API, models to store information from the API, components for general use across the platform, and pages as components linked to specific routes.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Notable components:
 
-## Build
+The grid component handles rendering an abstract concept of a grid with mutable features to allow for reuse across the site, since most pages rely on a grid of some kind.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The weather icon component allows for simple abstraction of the concept of a weather icon, but the calculation is still done before passing to the component itself.

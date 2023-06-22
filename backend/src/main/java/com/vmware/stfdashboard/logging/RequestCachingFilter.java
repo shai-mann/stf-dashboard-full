@@ -15,6 +15,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+/**
+ * A {@link javax.servlet.Filter} that logs API requests.
+ * @see CachedServletInputStream
+ * @see CachedHttpServletRequest
+ */
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
 @WebFilter(filterName = "RequestCachingFilter", urlPatterns = "/*")

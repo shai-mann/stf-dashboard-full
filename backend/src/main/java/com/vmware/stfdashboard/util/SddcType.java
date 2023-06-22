@@ -1,5 +1,8 @@
 package com.vmware.stfdashboard.util;
 
+/**
+ * An enum containing the SDDC types supported by this project.
+ */
 public enum SddcType {
     VMC("VMC"),
     AVS("AVS"),

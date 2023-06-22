@@ -1,11 +1,22 @@
 package com.vmware.stfdashboard.api;
 
+import com.vmware.stfdashboard.api.builders.UpstreamInfoBuilder;
+import com.vmware.stfdashboard.models.processed.UpstreamJobBuildEntity;
+import com.vmware.stfdashboard.services.BuildService;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import java.util.Date;
 import java.util.Optional;
 
+/**
+ * Contains information about an {@link UpstreamJobBuildEntity}, stored such that it can
+ * be sent via an API endpoint.
+ * @see UpstreamInfoBuilder
+ * @see BuildService
+ */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UpstreamInfo {
+
     private int jobId;
     private String upstreamName, jobUrl, buildUrl;
     private int buildId, buildNumber;
